@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { AuthUseCase } from 'src/modules/auth/application/driven-port/auth-use-case';
+import { AUTH_PROVIDER_TOKENS } from '../config/auth.provider';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    @Inject('AuthUseCase') // Asegúrate de usar el mismo token registrado en el módulo
+    @Inject(AUTH_PROVIDER_TOKENS.AUTH_USE_CASE) // Asegúrate de usar el mismo token registrado en el módulo
     private readonly _authUseCase: AuthUseCase,
   ) {}
   @Post('login')
