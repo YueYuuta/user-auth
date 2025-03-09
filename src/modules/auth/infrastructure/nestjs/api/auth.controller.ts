@@ -1,6 +1,9 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
 import { AuthUseCase } from 'src/modules/auth/application/driven-port/auth-use-case';
 import { AUTH_PROVIDER_TOKENS } from '../config/auth.provider';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -9,13 +12,15 @@ export class AuthController {
     private readonly _authUseCase: AuthUseCase,
   ) {}
   @Post('login')
-  async create(@Body() login: { username: string; password: string }) {
+  async create(@Body() login: LoginDto) {
     return await this._authUseCase.login(login.username, login.password);
   }
+
   @Post('register')
-  async register(
-    @Body() user: { username: string; password: string; email: string },
-  ) {
+  // @ApiResponse({ status: 201, description: 'User successfully registered' })
+  // @ApiResponse({ status: 400, description: 'User already exists' }) // Documentar un error específico
+  // @ApiResponse({ status: 400, description: 'Validation error: Invalid input' }) // Documentar errores de class-validator
+  async register(@Body() user: RegisterDto) {
     return await this._authUseCase.register(
       user.username,
       user.password,
