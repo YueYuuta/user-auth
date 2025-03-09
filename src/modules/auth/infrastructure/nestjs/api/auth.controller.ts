@@ -1,6 +1,12 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { IAuthInputPort } from 'src/modules/auth/application/driven-port/IAuthInputPort';
-
+// @Throttle({
+//   default: {
+//     ttl: 6000,
+//     limit: 10,
+//   },
+// })
 @Controller('auth')
 export class AuthController {
   constructor(

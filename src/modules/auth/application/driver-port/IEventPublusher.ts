@@ -1,3 +1,3 @@
-export interface EventPublisher {
+export interface IEventPublisher {
   publishEvent(eventName: string, event: any): void;
 }

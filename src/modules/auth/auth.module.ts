@@ -19,8 +19,10 @@ import { IMail } from './application/driver-port/IMail';
 import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
 import { UserRegisterInEventHandler } from './infrastructure/repository/user-register.repository';
 import { NestEventPublisher } from './infrastructure/repository/event-publisher.repository';
-import { EventPublisher } from './application/driver-port/IEventPublusher';
+import { IEventPublisher } from './application/driver-port/IEventPublusher';
 import { UserLoggedInEventHandler } from './infrastructure/repository/user-loggedin.repository';
+import { NestLoggerService } from './infrastructure/repository/logger.repository';
+import { ILogger } from './application/driver-port/ILogger';
 
 @Module({
   imports: [
@@ -67,6 +69,10 @@ import { UserLoggedInEventHandler } from './infrastructure/repository/user-logge
       provide: 'IMail', // Token para la clase
       useClass: NodemailerMailService, // Instancia concreta de la clase
     },
+    {
+      provide: 'ILogger', // Token para la clase
+      useClass: NestLoggerService, // Instancia concreta de la clase
+    },
 
     UserRegisterInEventHandler,
     UserLoggedInEventHandler,
@@ -94,8 +100,8 @@ import { UserLoggedInEventHandler } from './infrastructure/repository/user-logge
         userRepository: IUserRepository,
         passwordValidationService: PasswordValidationService,
         verificationToken: IVerificationToken,
-
-        eventPublisher: EventPublisher,
+        eventPublisher: IEventPublisher,
+        logger: ILogger,
       ) => {
         return new AuthUseCase(
           passwordHasher,
@@ -103,8 +109,8 @@ import { UserLoggedInEventHandler } from './infrastructure/repository/user-logge
           userRepository,
           passwordValidationService,
           verificationToken,
-
           eventPublisher,
+          logger,
         );
       },
       inject: [
@@ -113,8 +119,8 @@ import { UserLoggedInEventHandler } from './infrastructure/repository/user-logge
         'IUserRepository',
         'PasswordValidationService',
         'IVerificationToken',
-
         'EventPublisher',
+        'ILogger',
       ],
     },
   ],

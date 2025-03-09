@@ -5,15 +5,15 @@ import { ITokenService } from '../driver-port/ITokenService';
 import { User } from 'src/modules/user/domain/entity/user.entity';
 import { PasswordValidationService } from '../../domain/service/password-validator';
 import { UserNotFoundError } from 'src/modules/shared/error/not-found-user.error';
-import { InactiveAccountError } from '../error/inactive-user.error';
-import { InvalidCredentialsError } from '../error/invalid-credentials.error';
+import { InactiveAccountError } from '../errors/inactive-user.error';
+import { InvalidCredentialsError } from '../errors/invalid-credentials.error';
 import { UsernameAlreadyTakenError } from 'src/modules/shared/error/username-already-taken.error';
-import { UserNotVerifiedError } from '../../domain/error/user-not-verified.error';
+import { UserNotVerifiedError } from '../../domain/errors/user-not-verified.error';
 import { IVerificationToken } from '../driver-port/IVerificationToken';
-import { IMail } from '../driver-port/IMail';
-import { EventPublisher } from '../driver-port/IEventPublusher';
+import { IEventPublisher } from '../driver-port/IEventPublusher';
 import { UserRegisterInEvent } from '../event/user-register-in.event';
 import { UserLoggedInEvent } from '../event/user-logged-in.event';
+import { ILogger } from '../driver-port/ILogger';
 
 export class AuthUseCase implements IAuthInputPort {
   constructor(
@@ -22,15 +22,20 @@ export class AuthUseCase implements IAuthInputPort {
     private readonly userRepository: IUserRepository,
     private readonly passwordValidator: PasswordValidationService,
     private readonly verificationToken: IVerificationToken,
-
-    private readonly eventPublisher: EventPublisher,
+    private readonly eventPublisher: IEventPublisher,
+    private readonly logger: ILogger,
   ) {}
 
   async login(
     username: string,
     password: string,
   ): Promise<{ accessToken: string }> {
+    this.logger.log(
+      'AuthUseCase',
+      `Attempting login for username: ${username}`,
+    );
     const user = await this.userRepository.findByUsername(username);
+    this.logger.log(`AuthUseCase: `, `User found: ${username}`);
 
     if (!user) {
       throw new UserNotFoundError();
@@ -56,10 +61,14 @@ export class AuthUseCase implements IAuthInputPort {
     const token = await this.tokenService.generateToken({
       id: user.id,
     });
+    this.logger.log(`AuthUseCase: `, `Token generated: ${token}`);
+
     this.eventPublisher.publishEvent(
       'user.loggedin', //TODO: Cambiar por una constante
       new UserLoggedInEvent(user.email),
     );
+    this.logger.log(`AuthUseCase: `, `Even notification to: ${user.email}`);
+
     return { accessToken: token };
   }
 

@@ -1,4 +1,4 @@
-import { WeakPasswordError } from '../error/weak-password.error';
+import { WeakPasswordError } from '../errors/weak-password.error';
 
 export class PasswordValidationService {
   // Valida las reglas del dominio para contraseñas

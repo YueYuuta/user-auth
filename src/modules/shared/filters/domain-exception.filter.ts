@@ -3,12 +3,14 @@ import {
   Catch,
   ArgumentsHost,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { DomainError } from '../error/error.domain';
-import { WeakPasswordError } from 'src/modules/auth/domain/error/weak-password.error';
+import { WeakPasswordError } from 'src/modules/auth/domain/errors/weak-password.error';
 
 @Catch(DomainError)
 export class DomainExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(DomainExceptionFilter.name);
   catch(exception: DomainError, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
@@ -22,6 +24,7 @@ export class DomainExceptionFilter implements ExceptionFilter {
       default:
         httpStatus = HttpStatus.BAD_REQUEST; // Por defecto: 400 Bad Request
     }
+    this.logger.error(`DomainError: ${exception.message}`, exception.stack);
 
     // Responder al cliente con un JSON claro
     response.status(httpStatus).json({
