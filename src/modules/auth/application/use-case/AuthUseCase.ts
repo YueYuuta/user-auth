@@ -11,6 +11,9 @@ import { UsernameAlreadyTakenError } from 'src/modules/shared/error/username-alr
 import { UserNotVerifiedError } from '../../domain/error/user-not-verified.error';
 import { IVerificationToken } from '../driver-port/IVerificationToken';
 import { IMail } from '../driver-port/IMail';
+import { EventPublisher } from '../driver-port/IEventPublusher';
+import { UserRegisterInEvent } from '../event/user-register-in.event';
+import { UserLoggedInEvent } from '../event/user-logged-in.event';
 
 export class AuthUseCase implements IAuthInputPort {
   constructor(
@@ -19,7 +22,8 @@ export class AuthUseCase implements IAuthInputPort {
     private readonly userRepository: IUserRepository,
     private readonly passwordValidator: PasswordValidationService,
     private readonly verificationToken: IVerificationToken,
-    private readonly mail: IMail,
+
+    private readonly eventPublisher: EventPublisher,
   ) {}
 
   async login(
@@ -52,6 +56,10 @@ export class AuthUseCase implements IAuthInputPort {
     const token = await this.tokenService.generateToken({
       id: user.id,
     });
+    this.eventPublisher.publishEvent(
+      'user.loggedin', //TODO: Cambiar por una constante
+      new UserLoggedInEvent(user.email),
+    );
     return { accessToken: token };
   }
 
@@ -75,7 +83,11 @@ export class AuthUseCase implements IAuthInputPort {
     const user_id = await this.userRepository.save(user);
 
     const token = await this.verificationToken.generateToken(user_id); // Generar token
-    await this.mail.sendVerificationEmail(email, token);
+    this.eventPublisher.publishEvent(
+      'user.registered', //TODO: Cambiar por una constante
+      new UserRegisterInEvent(user.email, token),
+    );
+    // await this.mail.sendVerificationEmail(email, token);
   }
   async verifyAccount(token: string): Promise<void> {
     const { userId } = this.verificationToken.validateToken(token);

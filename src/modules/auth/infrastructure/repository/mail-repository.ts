@@ -31,4 +31,13 @@ export class NodemailerMailService implements IMail {
       `,
     });
   }
+  async sendLoginNotification(email: string): Promise<void> {
+    await this.transporter.sendMail({
+      from: 'noreply@yourapp.com',
+      to: email,
+      subject: 'Login Notification',
+      text: `You have successfully logged in to your account.`,
+      html: `<p>You have successfully logged in to your account.</p>`,
+    });
+  }
 }

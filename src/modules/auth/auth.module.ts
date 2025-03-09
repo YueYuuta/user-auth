@@ -10,16 +10,21 @@ import { UserModule } from '../user/user.module';
 import { IPasswordHasher } from './application/driver-port/IPasswordHasher';
 import { ITokenService } from './application/driver-port/ITokenService';
 import { IUserRepository } from '../user/application/driver-port/IUserRepositor';
-import { UserRepository } from '../user/infrastructure/nestjs/repository/user.repository';
 import { JwtStrategy } from './infrastructure/jwt/jwt-strategy';
 import { PasswordValidationService } from './domain/service/password-validator';
 import { IVerificationToken } from './application/driver-port/IVerificationToken';
 import { JwtVerificationTokenRepository } from './infrastructure/repository/JwtVerificationTokenRepository';
 import { NodemailerMailService } from './infrastructure/repository/mail-repository';
 import { IMail } from './application/driver-port/IMail';
+import { EventEmitter2, EventEmitterModule } from '@nestjs/event-emitter';
+import { UserRegisterInEventHandler } from './infrastructure/repository/user-register.repository';
+import { NestEventPublisher } from './infrastructure/repository/event-publisher.repository';
+import { EventPublisher } from './application/driver-port/IEventPublusher';
+import { UserLoggedInEventHandler } from './infrastructure/repository/user-loggedin.repository';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -46,10 +51,10 @@ import { IMail } from './application/driver-port/IMail';
       useClass: BcryptPasswordHasher,
     },
     // Implementación del puerto ITokenService
-    {
-      provide: 'ITokenService',
-      useClass: JwtTokenService,
-    },
+    // {
+    //   provide: 'ITokenService',
+    //   useClass: JwtTokenService,
+    // },
     {
       provide: 'PasswordValidationService', // Token para la clase
       useClass: PasswordValidationService, // Instancia concreta de la clase
@@ -63,6 +68,17 @@ import { IMail } from './application/driver-port/IMail';
       useClass: NodemailerMailService, // Instancia concreta de la clase
     },
 
+    UserRegisterInEventHandler,
+    UserLoggedInEventHandler,
+    { provide: 'EventPublisher', useClass: NestEventPublisher },
+
+    {
+      provide: 'EventPublisher',
+      useFactory: (eventEmitter2: EventEmitter2) => {
+        return new NestEventPublisher(eventEmitter2);
+      },
+      inject: [EventEmitter2],
+    },
     {
       provide: 'ITokenService',
       useFactory: (jwtService: JwtService) => {
@@ -78,21 +94,17 @@ import { IMail } from './application/driver-port/IMail';
         userRepository: IUserRepository,
         passwordValidationService: PasswordValidationService,
         verificationToken: IVerificationToken,
-        mail: IMail,
+
+        eventPublisher: EventPublisher,
       ) => {
-        console.log('passwordHasher:', passwordHasher); // Debería estar definido
-        console.log('tokenService:', tokenService); // Debería estar definido
-        console.log('userRepository:', userRepository); // Debería estar definido
-        console.log('passwordValidationService:', passwordValidationService); // Debería estar definido
-        console.log('verificationToken:', verificationToken); // Debería estar definido
-        console.log('mail:', mail); // Debería estar definido
         return new AuthUseCase(
           passwordHasher,
           tokenService,
           userRepository,
           passwordValidationService,
           verificationToken,
-          mail,
+
+          eventPublisher,
         );
       },
       inject: [
@@ -101,7 +113,8 @@ import { IMail } from './application/driver-port/IMail';
         'IUserRepository',
         'PasswordValidationService',
         'IVerificationToken',
-        'IMail',
+
+        'EventPublisher',
       ],
     },
   ],
