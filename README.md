@@ -1,85 +1,164 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+Authentication API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+An advanced and modular Authentication API built with NestJS. It follows clean architecture principles, integrates Swagger for documentation, and ensures robust validation and error handling.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+Table of Contents
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+1. Features
+2. Technologies
+3. Setup
+4. Usage
+5. Email Notifications
+6. Documentation
+7. Contributing
+8. License
 
-## Project setup
+---
 
-```bash
-$ yarn install
-```
+Features
 
-## Compile and run the project
+- User authentication with secure password hashing and token-based login.
+- Modular design using Hexagonal Architecture principles.
+- Validation of inputs with class-validator.
+- Comprehensive API documentation using Swagger.
+- Centralized error handling with custom exceptions.
+- Scalable event-driven architecture with EventEmitter.
+- **Email notifications for events such as user registration.**
 
-```bash
-# development
-$ yarn run start
+---
 
-# watch mode
-$ yarn run start:dev
+Technologies
 
-# production mode
-$ yarn run start:prod
-```
+- NestJS (Framework)
+- Swagger (API Documentation)
+- class-validator (Validation)
+- PostgreSQL (Database)
+- Docker (Environment Setup)
+- EventEmitter2 (Event-Driven Architecture)
+- Nodemailer (Email Notifications)
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ yarn run test
+Setup
 
-# e2e tests
-$ yarn run test:e2e
+Prerequisites
 
-# test coverage
-$ yarn run test:cov
-```
+- Node.js (v16+)
+- Docker and Docker Compose (for database setup)
+- PostgreSQL (if not using Docker)
 
-## Resources
+Installation
 
-Check out a few resources that may come in handy when working with NestJS:
+1. Clone the repository:
+   git clone https://github.com/YueYuuta/user-auth.git
+   cd user-auth
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+2. Install dependencies:
+   npm install
 
-## Support
+3. Set up the environment variables.
+   These variables are **required** for the application to run and **should not be committed to the repository**.
+   Create a `.env` file in the root directory with the following content:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+   HOST PORT USERDB PASSWORD DATABASE JWT_SECRET EMAIL_USER EMAIL_PASS
 
-## Stay in touch
+4. (Optional) Run the database using Docker:
+   docker-compose up -d
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Running the Application
 
-## License
+- Start the development server:
+  npm run start
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- Start in watch mode:
+  npm run start:dev
+
+- Build for production:
+  npm run build
+  npm run start:prod
+
+---
+
+Usage
+
+API Endpoints
+
+Authentication
+
+- POST /auth/register: Register a new user.
+- POST /auth/login: Authenticate a user and return a JWT.
+
+Example Request: Register
+POST /auth/register
+Content-Type: application/json
+Body:
+{
+"email": "user@example.com",
+"password": "Password123",
+"username": "User123"
+}
+
+Example Response: Register
+{
+"message": "User successfully registered"
+}
+
+Example Request: Login
+POST /auth/login
+Content-Type: application/json
+Body:
+{
+"username": "User123",
+"password": "Password123"
+}
+
+Example Response: Login
+{
+"access_token": "your.jwt.token"
+}
+
+Email Notifications
+
+The application is configured to send email notifications for specific events such as **user registration**. This is achieved using **Nodemailer** and environment variables for secure email account integration.
+
+### Environment Variables for Email
+
+## To enable email notifications, ensure the following variables are set in your `.env` file:
+
+EMAIL_USER=your_email EMAIL_PASS=your_password
+
+### How It Works
+
+- When a user registers, the application sends a **welcome email** to their email address.
+- The email is sent using the SMTP configuration derived from the environment variables.
+
+### Example Welcome Email
+
+Documentation
+Swagger UI is available at: http://localhost:3000/api
+
+Features in Swagger
+
+- Explore all available endpoints.
+- Test API requests directly in the browser.
+- View request and response models.
+
+---
+
+Contributing
+
+1. Fork the repository.
+2. Create a new branch:
+   git checkout -b feature/your-feature-name
+3. Commit your changes:
+   git commit -m "Add new feature"
+4. Push to the branch:
+   git push origin feature/your-feature-name
+5. Open a pull request on GitHub.
+
+---
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
