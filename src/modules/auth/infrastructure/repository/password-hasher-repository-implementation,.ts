@@ -1,7 +1,9 @@
-import { IPasswordHasher } from '../../application/driver-port/IPasswordHasher';
+import { PasswordHasherRepository } from '../../application/driver-port/password-hasher.repository';
 import * as bcrypt from 'bcrypt';
 
-export class BcryptPasswordHasher implements IPasswordHasher {
+export class PasswordHasherRepositoryImplementation
+  implements PasswordHasherRepository
+{
   async hash(password: string): Promise<string> {
     const salt = await bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);

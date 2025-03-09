@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 // import { User } from './domain/entity/user.entity';
-import { UserUseCase } from './application/use-case/UserUseCase';
-import { UserRepository } from './infrastructure/nestjs/repository/user.repository';
+import { UserUseCaseImplementation } from './application/use-case/user-use-case-implementation';
+import { UserRepositoryImplementation } from './infrastructure/repository/user-repository-implementation';
 import { User } from './infrastructure/typeorm/entity/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
   providers: [
     {
-      provide: 'IUserInputPort',
-      useClass: UserUseCase,
+      provide: 'UserUseCase',
+      useClass: UserUseCaseImplementation,
     },
     {
       provide: 'IUserRepository',
-      useClass: UserRepository,
+      useClass: UserRepositoryImplementation,
     },
   ],
   exports: ['IUserRepository'],

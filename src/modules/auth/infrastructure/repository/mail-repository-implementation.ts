@@ -1,14 +1,8 @@
 import * as nodemailer from 'nodemailer';
-import { IMail } from '../../application/driver-port/IMail';
+import { MailRepository } from '../../application/driver-port/mail.repository';
 
-export class NodemailerMailService implements IMail {
+export class MailRepositoryImplementation implements MailRepository {
   private transporter = nodemailer.createTransport({
-    // host: 'smtp.mailtrap.io', // Usa Mailtrap para pruebas
-    // port: 587,
-    // auth: {
-    //   user: 'yourUsername', // Tus credenciales de Mailtrap
-    //   pass: 'yourPassword',
-    // },
     host: 'smtp.gmail.com',
     port: 465,
     secure: true,

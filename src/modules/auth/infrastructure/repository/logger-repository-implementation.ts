@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ILogger } from '../../application/driver-port/ILogger';
+import { LoggerRepository } from '../../application/driver-port/logger.repository';
 
 @Injectable()
-export class NestLoggerService implements ILogger {
+export class LoggerRepositoryImplementation implements LoggerRepository {
   private readonly logger = new Logger();
 
   log(context: string, message: string): void {

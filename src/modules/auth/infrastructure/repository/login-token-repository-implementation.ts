@@ -1,8 +1,10 @@
-import { ITokenService } from '../../application/driver-port/ITokenService';
+import { LoginTokenRepository } from '../../application/driver-port/login-token.repository';
 import { JwtService } from '@nestjs/jwt';
 import { IPayload } from '../../application/interface/IPayload.interface';
 
-export class JwtTokenService implements ITokenService {
+export class LoginTokenRepositoryImplementation
+  implements LoginTokenRepository
+{
   constructor(private readonly jwtService: JwtService) {}
 
   async generateToken(payload: IPayload): Promise<string> {

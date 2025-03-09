@@ -1,7 +1,9 @@
 import * as jwt from 'jsonwebtoken';
-import { IVerificationToken } from '../../application/driver-port/IVerificationToken';
+import { NotificationTokenRepository } from '../../application/driver-port/notification-token.repository';
 
-export class JwtVerificationTokenRepository implements IVerificationToken {
+export class NotificationTokenRepositoryImplementation
+  implements NotificationTokenRepository
+{
   private readonly secret = 'yourSecretKey'; // Usa una clave segura y coloca esto en variables de entorno
 
   generateToken(userId: number): string {

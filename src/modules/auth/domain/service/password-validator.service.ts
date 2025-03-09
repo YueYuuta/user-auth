@@ -1,6 +1,6 @@
 import { WeakPasswordError } from '../errors/weak-password.error';
 
-export class PasswordValidationService {
+export class PasswordValidationDomainService {
   // Valida las reglas del dominio para contraseñas
   validate(password: string): void {
     this.ensureMinLength(password);

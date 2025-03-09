@@ -1,7 +1,9 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { IEventPublisher } from '../../application/driver-port/IEventPublusher';
+import { EventPublisherRepository } from '../../application/driver-port/event-publisher.repository';
 
-export class NestEventPublisher implements IEventPublisher {
+export class EventPublisherRepositoryImplementation
+  implements EventPublisherRepository
+{
   constructor(private readonly eventEmitter: EventEmitter2) {}
 
   publishEvent(eventName: string, event: any): void {

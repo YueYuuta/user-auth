@@ -1,5 +1,5 @@
 import { IPayload } from '../interface/IPayload.interface';
 
-export interface ITokenService {
+export interface LoginTokenRepository {
   generateToken(payload: IPayload): Promise<string>;
 }

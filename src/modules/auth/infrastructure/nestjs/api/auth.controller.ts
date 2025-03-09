@@ -1,27 +1,21 @@
 import { Body, Controller, Get, Inject, Post, Query } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
-import { IAuthInputPort } from 'src/modules/auth/application/driven-port/IAuthInputPort';
-// @Throttle({
-//   default: {
-//     ttl: 6000,
-//     limit: 10,
-//   },
-// })
+import { AuthUseCase } from 'src/modules/auth/application/driven-port/auth-use-case';
+
 @Controller('auth')
 export class AuthController {
   constructor(
-    @Inject('IAuthInputPort') // Asegúrate de usar el mismo token registrado en el módulo
-    private readonly _iAuthInputPort: IAuthInputPort,
+    @Inject('AuthUseCase') // Asegúrate de usar el mismo token registrado en el módulo
+    private readonly _authUseCase: AuthUseCase,
   ) {}
   @Post('login')
   async create(@Body() login: { username: string; password: string }) {
-    return await this._iAuthInputPort.login(login.username, login.password);
+    return await this._authUseCase.login(login.username, login.password);
   }
   @Post('register')
   async register(
     @Body() user: { username: string; password: string; email: string },
   ) {
-    return await this._iAuthInputPort.register(
+    return await this._authUseCase.register(
       user.username,
       user.password,
       user.email,
@@ -31,7 +25,7 @@ export class AuthController {
   async verifyAccount(
     @Query('token') token: string,
   ): Promise<{ message: string }> {
-    await this._iAuthInputPort.verifyAccount(token);
+    await this._authUseCase.verifyAccount(token);
     return { message: 'Account verified successfully.' };
   }
 }
